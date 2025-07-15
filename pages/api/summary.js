@@ -1,9 +1,5 @@
-// pages/api/summary.js
-
 export default function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
+  
 
   const { topic } = req.body;
 
@@ -31,5 +27,5 @@ export default function handler(req, res) {
   };
 
   const summary = summaries[topic] || "No summary available for this topic.";
-  res.status(200).json({ summary });
+  return res.status(200).json({ summary });
 }

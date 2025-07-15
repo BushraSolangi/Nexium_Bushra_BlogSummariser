@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/router";
-import BlogModal from "../components/BlogModal";
+import {useState}  from "react";
+import  {useRouter}  from "next/router";
 import { summaries } from "../utils/summaries"; // Adjust path if using TS
 
 const blogsPerPage = 5;
