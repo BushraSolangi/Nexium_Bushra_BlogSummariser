@@ -4,6 +4,10 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const { url } = req.body;
 
   if (!url) {
@@ -15,14 +19,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const html = response.data;
     const $ = cheerio.load(html);
 
-    // Combine text from paragraphs
     const paragraphs = $('p')
-      .map((i, el) => $(el).text())
+      .map((i, el) => $(el).text().trim())
       .get()
+      .slice(0, 50) // optional: limit to first 50 paragraphs
       .join('\n\n');
 
     res.status(200).json({ content: paragraphs });
   } catch (error) {
+    console.error("❌ Scraping failed:", error);
     res.status(500).json({ error: 'Failed to scrape content' });
   }
 }

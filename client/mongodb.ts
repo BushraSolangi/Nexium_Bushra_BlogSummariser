@@ -1,13 +1,20 @@
-// lib/mongodb.ts
-import { MongoClient } from "mongodb";
+// client/mongodb.ts
+import { MongoClient, Db } from "mongodb";
 
 const uri = process.env.MONGODB_URI!;
 const client = new MongoClient(uri);
-let cachedDb: any = null;
 
-export async function connectToDatabase() {
+let cachedDb: Db | null = null;
+
+export async function connectToDatabase(): Promise<Db> {
   if (cachedDb) return cachedDb;
-  await client.connect();
-  cachedDb = client.db("blogSummariser");
-  return cachedDb;
+
+  try {
+    await client.connect();
+    cachedDb = client.db("blogSummariser");
+    return cachedDb;
+  } catch (err) {
+    console.error("❌ MongoDB connection failed:", err);
+    throw err;
+  }
 }
